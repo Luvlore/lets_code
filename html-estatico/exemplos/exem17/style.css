@@ -1,0 +1,91 @@
+html, body {
+    height: 100%;
+    
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+}
+
+header {
+    background-color: rgb(168, 47, 47);
+    grid-column: span 2;
+    color: whitesmoke;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 25px;
+}
+
+nav {
+    display: flex;
+    margin-top: -10px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav a {
+    color: whitesmoke;
+    font-weight: 600;
+}
+
+aside {
+    background-color: #ddd;
+    grid-row: span 2;
+    padding: 10px 20px;
+    overflow-y: visible;
+}
+
+aside a {
+    color: rgb(156, 13, 13);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+aside a:hover {
+    color: rgb(82, 4, 4);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+main {
+    padding: 0.5em;
+    background-color: #bbb;
+    padding: 10px 20px;
+    overflow-y: initial;
+}
+
+footer {
+    background-color: #ccc;
+    padding: 10px 20px;
+    grid-column: 2;
+    text-align: center;
+}
+
+.grid {
+    display: grid;
+
+    grid-template-columns: 20% 80%;
+    grid-template-rows: 80px 5fr 80px;
+
+}
+
+@media (min-width: 1680px) {
+    .grid {
+        grid-template-columns: 50px (100% - 200px);
+    }
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 200px 80%;
+    }
+}
+
+@media (max-width: 1440px) {
+    .grid {
+        grid-template-columns: 18% 82%;
+    }
+}
