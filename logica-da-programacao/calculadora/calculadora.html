@@ -5,27 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Calculadora</h1>
     <hr>
 
-    <label>Primeiro número: </label>
-    <input type="text" id="first-number" autofocus>
-    
-    <br><br>
+    <p>
+        <!-- criando dinâmicamente os inputs no js -->
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+        <label class="input"></label>
+    </p>
 
-    <label>Segundo número: </label>
-    <input type='text' id="second-number">
-
-    <button id="button">Calcular</button>
+    <p><button id="button">Calcular</button></p>
 
     <hr>
-    
+
     <div>
-        <label>Resultado: </label>
-        <label id="resultado"></label>
+        <p>Resultado: <label><input type="text" id="result"></label></p>
     </div>
+
     <hr>
 
     <script src="calculadora.js"></script>

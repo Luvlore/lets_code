@@ -1,0 +1,14 @@
+body {
+    text-align: center;
+}
+
+.number {
+    width: 50px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+#result {
+    width: 50px;
+    text-align: center;
+}
