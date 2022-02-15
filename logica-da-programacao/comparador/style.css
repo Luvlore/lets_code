@@ -6,3 +6,12 @@ input {
     width: 50px;
     text-align: center;
 }
+
+select {
+    height: 22px;
+    width: 40px;
+}
+
+button {
+    width: 35px;
+}

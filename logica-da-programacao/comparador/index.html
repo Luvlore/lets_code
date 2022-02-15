@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Comparação</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,8 +12,18 @@
     <hr>
     <p>
         <input type="text" id="first-number">
-        <span> > </span>
-        <input type="text" id="second-number"> <button id="button">=</button> 
+
+        <select name="select" id="select">
+            <option value="igual">=</option>
+            <option value="maior">></option>
+            <option value="maior-igual">≥</option>
+            <option value='menor'><</option>
+            <option value='menor-igual'>≤</option>
+            <option value="diferente">≠</option>
+        </select>
+
+        <input type="text" id="second-number">
+        <button id="button">=</button> 
         <input type="text" id="result">
     </p>
 
