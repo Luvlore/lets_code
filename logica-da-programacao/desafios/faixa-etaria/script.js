@@ -1,9 +1,8 @@
 const ageElement = document.getElementById('age');
 const button = document.getElementById('button');
-
 const result = document.getElementById('result')
 
-button.onclick = function() {
+function ageGroup() {
   const ageValue = Number(ageElement.value);
   
   if (ageValue < 13 && ageValue > 0) {
@@ -20,3 +19,10 @@ button.onclick = function() {
 
   ageElement.value = '';
 }
+
+function clear() {
+  result.value = '';
+}
+
+button.onclick = ageGroup;
+ageElement.onfocus = clear;
