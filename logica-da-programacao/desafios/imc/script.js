@@ -1,7 +1,7 @@
 const heightElem = document.getElementById('height');
 const widthElem = document.getElementById("width");
 const calc = document.getElementById('calc');
-const div = document.getElementById('result')
+const div = document.getElementById('container')
 const resultElem = document.createElement('p');
 
 calc.onclick = function() {
@@ -26,11 +26,10 @@ calc.onclick = function() {
       resultType = 'Obesidade Grau III';
     }
 
-    resultElem.innerHTML = `Seu cálculo do IMC deu ${resultValue} e você está com ${resultType}.`;
-    div.appendChild(resultElem);
+    resultElem.innerHTML = `Seu cálculo do IMC deu <strong>${resultValue}</strong> e você está com <strong>${resultType}</strong>.`;
   } else {
     resultType = 'Por favor, digite um valor válido!';
     resultElem.innerHTML = resultType;
-    div.append(resultElem);
   }
+  div.appendChild(resultElem);
 }

@@ -1,0 +1,19 @@
+body {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-family: Helvetica, sans-serif;
+}
+
+strong {
+  color: indigo;
+}
+
+hr {
+  width: 50%;
+}
+
+#container {
+  background-color: aqua;
+  width: 60%;
+}
