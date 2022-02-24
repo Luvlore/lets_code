@@ -13,32 +13,30 @@ header {
   text-align: center;
 }
 
-#container {
-  display: grid;
-  grid-template-columns: 3fr 3fr 3fr;
-  width: 80%;
-  margin-left: 10%;
-}
-
 .result {
   text-align: justify;
   margin-left: auto;
   margin-right: auto;
   width: 300px;
   border-bottom: 1px solid black;
-  margin-bottom: 10px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
+}
+
+.day-list {
+  margin-top: -20px;
+}
+
+#container {
+  display: grid;
+  grid-template-columns: 4fr 4fr 4fr 4fr;
+  width: 90%;
+  margin-left: 5%;
 }
 
 #container ul {
   border-bottom: solid black 1px;
-  width: 70%;
+  width: 75%;
   padding-bottom: 10px;
-}
-
-
-.day-list {
-  margin-top: -20px;
 }
 
 @media only screen and (max-width: 768px) {

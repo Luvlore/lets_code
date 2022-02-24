@@ -1,12 +1,3 @@
-// Paulo quer fazer entregas com seu carro e precisa saber se vale a pena de acordo com o custo.
-// Seu carro possui um taque de 40 litros de gasolina.
-// O carro faz 12km/L de gasolina em media
-// A distancia entre sua casa e o local onde retira as encomendas eh de 10km.
-// As entregas em media variam entre 5 e 15km de distancia do centro de distribuicao.
-// ele vai receber entre 5 e 10 encomendas por dia para entregar.
-// A valor da gasolina esta R$ 5,50
-// Dado essas condicoes faca um programa que calcule o gasto me
-
 const days = document.getElementById('days');
 const btnAdd = document.getElementById('button');
 const container = document.getElementById("container");
@@ -33,7 +24,7 @@ function createDays() {
       
       for (let index = 0; index < orderDay; index += 1) {
         const km = Math.floor(Math.random() * 11 + 5);
-        dayKm += km;
+        dayKm += km * 2;
       }      
 
       sumKm += dayKm;
@@ -49,16 +40,16 @@ function createDays() {
       const dayElem = document.createElement('ul');
       dayElem.classList.add('list');
       dayElem.innerHTML = `<li>Quilometragem do dia: ${dayKm}km</li>
-                           <li>Entregas do dia: ${orderDay}`;
+                           <li>Entregas do dia: ${('0' + orderDay).slice(-2)}`;
       createDiv.appendChild(dayElem);
 
-      container.append(createDiv)
+      container.append(createDiv);
     }
 
+    counter = Math.trunc(sumKm / 12 / 40);
     const result = document.createElement('p');
     result.classList.add('result')
 
-    counter = Math.trunc(sumKm / 12 / 40);
     const spent = counter * (gas * 40);
     result.innerHTML = `Em ${days.value} dias:
                       <ul>
