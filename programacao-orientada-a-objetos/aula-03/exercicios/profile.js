@@ -22,7 +22,7 @@ class Perfil {
 }
 
 const perfil1 = new Perfil('afallrea', 'https://data.whicdn.com/images/340439831/original.jpg', 'dark');
-const perfil2 = new Perfil('luvlore', 'i.pinimg.com/550x/ff/8a/01/ff8a01eda02d2002ca0155a6cf21b768.jpg', 'blueLight');
+const perfil2 = new Perfil('luvlore', 'i.pinimg.com/550x/ff/8a/01/ff8a01eda02d2002ca0155a6cf21b768.jpg', 'lightBlue');
 
 console.log(perfil1);
 console.log(perfil2);
