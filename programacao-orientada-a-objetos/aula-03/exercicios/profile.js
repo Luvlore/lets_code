@@ -18,16 +18,15 @@ class Perfil {
   verificaAvatar(avatar) {
     return avatar.split('').splice(0,4).join('') === 'http' ? this.avatar = avatar : undefined;
   }
-
 }
 
 const perfil1 = new Perfil('afallrea', 'https://data.whicdn.com/images/340439831/original.jpg', 'dark');
-const perfil2 = new Perfil('luvlore', 'i.pinimg.com/550x/ff/8a/01/ff8a01eda02d2002ca0155a6cf21b768.jpg', 'blueLight');
+const perfil2 = new Perfil('luvlore' , 'i.pinimg.com/550x/ff/8a/01/ff8a01eda02d2002ca0155a6cf21b768.jpg', 'blueLight');
 
 console.log(perfil1);
 console.log(perfil2);
 
-perfil1.mudaTema = 'lightBlue';
+perfil1.mudaTema = 'blueLight';
 console.log(perfil1);
 
 perfil1.mudaTema = 'light';

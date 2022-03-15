@@ -7,20 +7,25 @@ class Sorteio {
 
   sorteiaNumero() {
     const ganhadores = [];
-    
+
     for (let i = 0; i < this.participantes; i += 1) {
       let ganhador = Math.floor(Math.random() * this.participantes + 1);
       ganhadores.push(ganhador);
     }
-    console.log(ganhadores);
-    
+
     return ganhadores.filter((numero, index) => ganhadores.indexOf(numero) === index);
   }
 
-  ganhador() {
-    return this.sorteiaNumero().map(ganhador => `O número ganhador é: ${ganhador}!`)
+  preencheZero(numero) {
+    const caractere = this.participantes.toString().length;
+    return ('0'.repeat(caractere - 1) + numero).slice(-caractere);
   }
 
+  ganhador() {
+    return this.sorteiaNumero().reduce((acc, win, ind, arr) => ind === arr.length - 1 ?
+      `${acc}O número ganhador é: ${this.preencheZero(win)}!` :
+      `${acc}O número ganhador é: ${this.preencheZero(win)}!\n`, '');
+  }
 }
 
 const sorteio = new Sorteio(10);
