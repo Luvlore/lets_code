@@ -52,13 +52,17 @@ class Conta {
       return 'Saldo insuficiente!';
     }
     this.#saldo -= dinheiro;
-    this.lan.push(this.lancamentos(this.cliente, this.sacar, dinheiro, this.#saldo));
+
+    const tipo = 'Saque';
+    this.lan.push(this.lancamentos(this.cliente, tipo, dinheiro, this.#saldo));
 
   }
 
   depositar(dinheiro) {
     this.#saldo += dinheiro;
-    this.lan.push(this.lancamentos(this.cliente, this.depositar, dinheiro, this.#saldo));
+
+    const tipo = 'Depósito';
+    this.lan.push(this.lancamentos(this.cliente, tipo, dinheiro, this.#saldo));
   }
 
   // transferir(conta, dinheiro) {
@@ -70,21 +74,48 @@ class Conta {
   // }
 
   lancamentos(nome, operacao, valor, saldo) {
-    if (operacao === this.depositar) {
-      operacao = 'Depósito';
-    } else if (operacao === this.sacar) {
-      operacao = 'Saque';
-    }
-
-    const data = `${new Date().getDate()}/${new Date().getMonth() + 1}/${new Date().getFullYear()}`
-    const hora = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+    const data = `${new Date().getDate()}/${('0' + (new Date().getMonth() + 1)).slice(-2)}/${new Date().getFullYear()}`; // DD/MM/AA
+    const hora = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`; // HH/MM/SS
 
     return {
       cliente: nome,
       operacao: operacao,
-      valor: valor,
-      saldo: saldo,
+      valor: `R$${valor.toFixed(2)}`,
+      saldo: `R$${saldo.toFixed(2)}`,
       horario: `${data} ${hora}`,
+    }
+  }
+
+  pag(vencimento, pagamento) {
+    const data1 = new Date(vencimento);
+    const data2 = new Date();
+    const tempoVencimento = data1.getTime() - data2.getTime();
+    let diasVencimento = Math.ceil(tempoVencimento / (1000 * 3600 * 24)) - 1;
+
+
+    if (diasVencimento < 0) {
+      if (diasVencimento === 1) {
+        pagamento += pagamento * 0.01;
+      } else if (diasVencimento === 2) {
+        pagamento += pagamento * 0.025;
+      } else {
+        pagamento += (1 + 0.025) ** diasVencimento;
+      }
+
+      return `O valor que você deve pagar é R$${pagamento.toFixed(2)}, seu boleto está ${Math.abs(diasVencimento)} dias atrasados.`;
+    }
+
+
+    try {
+      if (pagamento > this.#saldo) {
+        throw new Error('Saldo insuficiente!')
+      }
+
+      this.#saldo -= pagamento;
+      return `O valor que você deve pagar é R$${pagamento.toFixed(2)}.`
+
+    } catch (e) {
+      return e.message;
     }
   }
 }
@@ -95,12 +126,6 @@ class PessoaFisica extends Conta {
     this.cpf = cpf;
     this.rg = rg;
   }
-
-  verificaCpf() {
-    if (this.cpf.toString().length !== 11) {
-      return 'Documento inválido!';
-    }
-  }
 }
 
 class PessoaJuridica extends Conta {
@@ -109,12 +134,6 @@ class PessoaJuridica extends Conta {
     this._cnpj = cnpj;
   }
 
-  // verificaCnpj() {
-  //   if (this._cnpj.toString().length !== 14) {
-  //     return 'Documento inválido!';
-  //   }
-  // }
-
   get cnpj() {
     return this._cnpj;
   }
@@ -122,68 +141,12 @@ class PessoaJuridica extends Conta {
 }
 
 // const cpf = new PessoaFisica('Bruna', 1234, 098, 200, 12345678900);
-const cnpj = new PessoaJuridica('Bruna', 1234, 098, 200, 1234567809011);
+// const cnpj = new PessoaJuridica('Bruna', 1234, 098, 200, 1234567809011);
 
-console.log();
-const conta = new Conta('aaaa', 1234, 123, 400)
+const conta = new Conta('Fulano de Tal', 1234, 123, 400)
 
 conta.depositar(500)
 conta.depositar(500)
 conta.sacar(500)
-// console.log(conta.lan)
-
-const meses = {
-  janeiro: 31,
-  feveiro: 28,
-  março: 31,
-  abril: 30,
-  maio: 31,
-  junho: 30,
-  julho: 31,
-  agosto: 31,
-  setembro: 30,
-  outubro: 31,
-  novembro: 30,
-  dezembro: 31,
-}
-
-const func = (valor, dia, mes, ano) => {
-  const data = new Date();
-  let mesDias = Object.values(meses);
-  mesDias = mesDias[mes];
-  ano = Math.abs(ano - data.getFullYear()) * 365;
-  mes = Math.abs(mes - data.getMonth()) * mesDias - dia;
-  dia = Math.abs(dia - data.getDate());
-
-  const diasTotais = ano + mes + dia;
-  let juros = valor * 0.025 * diasTotais;
-
-  if (diasTotais === 1) {
-    valor += valor * 0.01;
-  } else if (diasTotais === 2) {
-    valor += valor * 0.025;
-  } else {
-    valor = valor + juros;
-  }
-  console.log(valor);
-  return valor;
-}
-
-console.log(func(500, 17, 2, 2022))
-
-const tempo = new Date();
-// console.log(tempo.getDate())
-// console.log(tempo.get(), tempo.getMonth(),tempo.getDay(),);
-// const teste = new Date ()
-// const teste2 = new Date ()
-
-// console.log(teste);
-// console.log(teste2);
-
-
-/*
-
-class Pessoa:
-  
-
-*/
+console.log(conta.lan)
+console.log(conta.pag('04/12/2022', 1500))
