@@ -1,152 +1,153 @@
-/*
-
-  Crie uma (ou mais) classe para representar um app de banco
-
-  - Deverá ter diferenciação de clientes PJ e PF
-
-  Pense no que deve ou não ser tratado como herança
-  Pense no que deve ou não ser privado
-  Pense em outras coisas que façam sentido para um app de banco e que faça consigo implementar
-
-
-  No cliente pessoa física, criar um método
-  onde retorna os dados de rg e cpf.
-  No cliente pessoa juridica, criar um método
-  onde retorna os dados do cnpj
-
-  Utilize o conceito de Polimorfismo para execução da solicitação acima
-
-
-  Crie uma Objeto Lançamentos 
-  e para cada operação de saque ou depósito
-  Insira os seguintes registros nessa objeto:
-    - Nome do Cliente
-    - Tipo da Operação (se foi saque ou se foi depósito)
-    - Valor
-    - Horario da Transação
-  Considerando o conceito de encapsulamento
-  deixe o saldo bancário do cliente inacessível fora do escopo de conta.
-  Lembre-se apenas o escopo de conta poderá movimentar o saldo bancário.
-
-  Crie um método que calcule o juros de atraso 
-  de um determinado pgto, onde tenha as seguintes regras: 
-  - Atraso de 1 dia juros de 1%
-  - Atraso de 2 dias juros 2.5 % 
-  - Atraso de 3 dias ou mais, juros composto 
- */
-
-
 class Conta {
-  #saldo
 
   constructor(cliente, conta, agencia, saldo = 0) {
     this.cliente = cliente;
     this.conta = conta;
     this.agencia = agencia;
-    this.#saldo = saldo;
-    this.lan = []
+    this.saldo = saldo;
+    this.lan = [];
+    this.juros = 0;
   }
-
-  sacar(dinheiro) {
-    if (dinheiro > this.#saldo) {
-      return 'Saldo insuficiente!';
-    }
-    this.#saldo -= dinheiro;
-
-    const tipo = 'Saque';
-    this.lan.push(this.lancamentos(this.cliente, tipo, dinheiro, this.#saldo));
-
-  }
-
-  depositar(dinheiro) {
-    this.#saldo += dinheiro;
-
-    const tipo = 'Depósito';
-    this.lan.push(this.lancamentos(this.cliente, tipo, dinheiro, this.#saldo));
-  }
-
-  // transferir(conta, dinheiro) {
-  //   if (dinheiro > this.#saldo || dinheiro > this.limite) {
-  //     return 'Saldo insuficiente!';
-  //   }
-  //   this.sacar(dinheiro);
-  //   conta.depositar(dinheiro);
-  // }
-
-  lancamentos(nome, operacao, valor, saldo) {
+  
+  lancamentos(nome, operacao, valor) {
     const data = `${new Date().getDate()}/${('0' + (new Date().getMonth() + 1)).slice(-2)}/${new Date().getFullYear()}`; // DD/MM/AA
     const hora = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`; // HH/MM/SS
 
-    return {
+    this.lan.push({
       cliente: nome,
       operacao: operacao,
       valor: `R$${valor.toFixed(2)}`,
-      saldo: `R$${saldo.toFixed(2)}`,
+      saldo: `R$${this.saldo}`,
       horario: `${data} ${hora}`,
+    })
+  }
+
+  leasing(data, valor, accept = false) {
+    if (accept) {
+      const dataPag = new Date();
+      const dias = Math.abs(new Date(data) - dataPag.getTime());
+      const diasCorridos = Math.ceil(dias / (1000 * 3600 * 24)) - 1;
+      const jurosTotais = Math.pow((1 + this.juros), diasCorridos);
+      const montante = valor * jurosTotais;
+
+      this.saldo -= montante;
+      this.saldo = this.saldo.toFixed(2);
+      this.lancamentos(this.cliente, 'Cheque Especial', valor);
+
+      return {
+        saldoNegativo: `R$ ${this.saldo}`,
+        jurosDia: this.juros * 100 + '%',
+        data: `${dataPag.getDate()}/${dataPag.getMonth()}/${dataPag.getFullYear()} ${dataPag.getHours()}:${dataPag.getMinutes()}:${dataPag.getSeconds()}`,
+        jurosAcc: jurosTotais.toFixed(2) + '%',
+      }
     }
   }
 
-  pag(vencimento, pagamento) {
-    const data1 = new Date(vencimento);
-    const data2 = new Date();
-    const tempoVencimento = data1.getTime() - data2.getTime();
-    let diasVencimento = Math.ceil(tempoVencimento / (1000 * 3600 * 24)) - 1;
+  sacar(valor, tipo='Saque') {
+    try {
+      if (valor > this.saldo) {
+        throw new Error('Saldo insuficiente!');
+      }
 
+      this.saldo = Number(this.saldo) - valor;
 
+      this.lancamentos(this.cliente, tipo, valor);
+    } catch(e) {
+      console.log(e.message);
+      return this.leasing('Mar 28, 2022', valor, true);
+    }
+  }
+
+  depositar(valor) {
+    this.saldo = Number(this.saldo) + valor;
+    this.lancamentos(this.cliente, 'Depósito', valor);
+  }
+
+  transferir(destino, valor) {
+    try {
+      this.sacar(valor, 'Tranferência');
+      destino.depositar(valor);
+    } catch(e) {
+      console.log(e.message);
+      return this.leasing('Mar 26, 2022', valor, true);
+    }
+  }
+
+  pag(vencimento, valor) {
+    const tempoVencimento = new Date(vencimento).getTime() - new Date().getTime();
+    const diasVencimento = Math.ceil(tempoVencimento / (1000 * 3600 * 24)) - 1;
     if (diasVencimento < 0) {
       if (diasVencimento === 1) {
-        pagamento += pagamento * 0.01;
+        valor += valor * 0.01;
       } else if (diasVencimento === 2) {
-        pagamento += pagamento * 0.025;
+        valor += valor * 0.025;
       } else {
-        pagamento += (1 + 0.025) ** diasVencimento;
+        valor *= (1 + 0.025) ** diasVencimento;
       }
-
-      return `O valor que você deve pagar é R$${pagamento.toFixed(2)}, seu boleto está ${Math.abs(diasVencimento)} dias atrasados.`;
     }
 
-
     try {
-      if (pagamento > this.#saldo) {
-        throw new Error('Saldo insuficiente!')
-      }
-
-      this.#saldo -= pagamento;
-      return `O valor que você deve pagar é R$${pagamento.toFixed(2)}.`
-
+      this.sacar(valor, 'Pagamento');
+      return 'Pagamento efetuado com sucesso!';
     } catch (e) {
-      return e.message;
+      console.log(e.message)
+      return this.leasing('Mar 26, 2022', valor, true);
     }
   }
 }
 
 class PessoaFisica extends Conta {
+  #cpf
+  #rg
+
   constructor(cliente, conta, agencia, saldo, cpf, rg) {
     super(cliente, conta, agencia, saldo);
+    this.juros = 0.005;
     this.cpf = cpf;
     this.rg = rg;
+  }
+
+  get cpf() {
+    return this.#cpf;
+  }
+
+  set cpf(cpf) {
+    this.#cpf = cpf;
+  }
+
+  get rg() {
+    return this.#rg;
+  }
+
+  set rg(rg) {
+    this.#rg = rg;
   }
 }
 
 class PessoaJuridica extends Conta {
+  #cnpj
+
   constructor(cliente, conta, agencia, saldo, cnpj) {
     super(cliente, conta, agencia, saldo);
-    this._cnpj = cnpj;
+    this.juros = 0.01;
+    this.#cnpj = cnpj;
   }
 
   get cnpj() {
-    return this._cnpj;
+    return this.#cnpj;
   }
 
+  set cnpj(cnpj) {
+    this.#cnpj = cnpj;
+  }
 }
 
-// const cpf = new PessoaFisica('Bruna', 1234, 098, 200, 12345678900);
-// const cnpj = new PessoaJuridica('Bruna', 1234, 098, 200, 1234567809011);
+const conta = new PessoaFisica('Fulano de Tal', 1234, 123, 400, 12345678900)
+const conta2 = new PessoaJuridica('Ciclano de Tal', 1234, 123, 400, 12345678900)
 
-const conta = new Conta('Fulano de Tal', 1234, 123, 400)
-
-conta.depositar(500)
-conta.depositar(500)
-conta.sacar(500)
-console.log(conta.lan)
-console.log(conta.pag('04/12/2022', 1500))
+console.log(conta.sacar(500));
+conta.depositar(1000);
+conta.transferir(conta2, 500);
+conta.sacar(50);
+console.log(conta.lan);
+console.log(conta2.lan);
